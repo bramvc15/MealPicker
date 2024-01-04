@@ -30,7 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.smallTopAppBarColors
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -53,11 +53,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MealPickerTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    // Greeting("Android")
                     listOfGroceryPage()
                 }
             }
@@ -110,10 +108,26 @@ fun listOfGroceryPage() {
                     .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            val meals =
+                remember {
+                    val list = PlannedMeal.getAll().toMutableList()
+
+                    list.toMutableStateList()
+                }
             if (addingMeal) {
-                createIngredient("flower", "some flower")
+                var name by remember {
+                    mutableStateOf("flower")
+                }
+                updateMeal(
+                    name,
+                    onChangeName = { name = it },
+                    onAdd={
+                        meals.add(PlannedMeal(name, "Monday", listOf(Ingrediant.getOne())))
+                        addingMeal = false
+                    }
+                )
             } else {
-                AllPlannedMeals()
+                AllPlannedMeals(meals)
                 IngrediantList()
             }
         }
@@ -121,8 +135,7 @@ fun listOfGroceryPage() {
 }
 
 @Composable
-fun AllPlannedMeals() {
-    val meals = PlannedMeal.getAll()
+fun AllPlannedMeals(meals: List<PlannedMeal>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "All planned meals",
@@ -130,22 +143,7 @@ fun AllPlannedMeals() {
             lineHeight = 40.sp,
         )
         for (meal in meals) {
-            Row {
-                Text(
-                    text = "${meal.day}: ",
-                    fontSize = 26.sp,
-                    lineHeight = 40.sp,
-                )
-                Text(
-                    text = "${meal.name}",
-                    // center vertically
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically),
-                    fontSize = 18.sp,
-                )
-            }
+            MealItem(name = meal.name, day = meal.day)
         }
 
         Text(
@@ -153,6 +151,29 @@ fun AllPlannedMeals() {
             fontSize = 26.sp,
             lineHeight = 20.sp,
             color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
+
+@Composable
+fun MealItem(
+    name: String = "",
+    day: String = "",
+) {
+    Row {
+        Text(
+            text = "$day: ",
+            fontSize = 26.sp,
+            lineHeight = 40.sp,
+        )
+        Text(
+            text = "$name",
+            // center vertically
+            modifier =
+            Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically),
+            fontSize = 18.sp,
         )
     }
 }
@@ -186,13 +207,14 @@ fun IngrediantItem(
     instruction: String = "",
     modifier: Modifier = Modifier,
 ) {
+    var checked by remember{mutableStateOf(false)}
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier =
-            modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth(),
+        modifier
+            .height(IntrinsicSize.Min)
+            .fillMaxWidth(),
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Text(
@@ -206,7 +228,8 @@ fun IngrediantItem(
                 lineHeight = 20.sp,
             )
         }
-        Checkbox(checked = true, onCheckedChange = {})
+
+        Checkbox(checked = checked, onCheckedChange = {checked = !checked})
     }
 }
 
@@ -240,23 +263,22 @@ fun GreetingPreview() {
 // les2 toevoegen
 
 @Composable
-fun createIngredient(
+fun updateMeal(
     name: String,
-    description: String,
+    onChangeName: (String) -> Unit,
+    onAdd: () -> Unit,
 ) {
-
-
-
     createDropdown()
 
-    TextField(value = description, onValueChange = {})
-    Button(onClick = { /* onAdd*/ }) {
+    TextField(label = { Text("Name: ")},value = "name", onValueChange = onChangeName)
+    Button(onClick = onAdd) {
         Text("Change meal")
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun createDropdown(){
+fun createDropdown() {
     var days =
         listOf(
             "Monday",
@@ -276,19 +298,19 @@ fun createDropdown(){
         ) {
             OutlinedTextField(
                 modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(),
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
                 readOnly = true,
                 value = selectedItem,
                 onValueChange = {},
                 label = { Text("Select a day") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                 colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                ),
+                    OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    ),
             )
             ExposedDropdownMenu(
                 expanded = expanded,

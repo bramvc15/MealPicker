@@ -1,4 +1,4 @@
-package com.example.mealpicker
+package com.example.mealpicker.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange

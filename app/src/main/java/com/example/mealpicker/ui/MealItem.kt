@@ -1,4 +1,4 @@
-package com.example.mealpicker
+package com.example.mealpicker.ui
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text

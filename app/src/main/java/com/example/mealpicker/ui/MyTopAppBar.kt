@@ -1,4 +1,4 @@
-package com.example.mealpicker
+package com.example.mealpicker.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme

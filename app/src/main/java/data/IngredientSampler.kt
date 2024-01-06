@@ -1,8 +1,9 @@
 package data
 
+import com.example.mealpicker.model.Ingredient
 import kotlin.random.Random
 
-data class Ingredient(val name: String, val instruction: String = "") {
+data class IngredientSampler(val name: String, val instruction: String = "") {
     companion object ingrediantSampler {
         val sampleIngredients =
             listOf(
@@ -31,19 +32,9 @@ data class Ingredient(val name: String, val instruction: String = "") {
                 Ingredient("ingrediant 23", "instructions"),
                 Ingredient("ingrediant 24", "instructions"),
                 Ingredient("ingrediant 25", "instructions"),
-                Ingredient("ingrediant 26", "instructions"),
-                Ingredient("ingrediant 27", "instructions"),
-                Ingredient("ingrediant 28", "instructions"),
-                Ingredient("ingrediant 29", "instructions"),
-                Ingredient("ingrediant 30", "instructions"),
-                Ingredient("ingrediant 31", "instructions"),
-                Ingredient("ingrediant 32", "instructions"),
-                Ingredient("ingrediant 33", "instructions"),
-                Ingredient("ingrediant 34", "instructions"),
-                Ingredient("ingrediant 35", "instructions"),
             )
-        val getOne: () -> Ingredient = {
-            Ingredient(
+        val getOne: () -> IngredientSampler = {
+            IngredientSampler(
                 sampleIngredients[Random.nextInt(0, sampleIngredients.size)].name,
                 sampleIngredients[Random.nextInt(0, sampleIngredients.size)].instruction,
             )

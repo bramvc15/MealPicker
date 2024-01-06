@@ -1,9 +1,7 @@
-package com.example.mealpicker
+package com.example.mealpicker.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,16 +18,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun UpdateMeal(
+    day: String,
     name: String,
     onChangeName: (String) -> Unit,
+    onChangeDay: (String) -> Unit,
     onAdd: () -> Unit,
 ) {
     Column {
-        CreateDropdown()
+        CreateDropdown(day, onChangeDay)
 
         TextField(label = { Text("Name: ") }, value = name, onValueChange = onChangeName)
 
@@ -41,7 +40,8 @@ fun UpdateMeal(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateDropdown() {
+fun CreateDropdown(day:String, onChangeDay: (String) -> Unit) {
+
     val days =
         listOf(
             "Monday",
@@ -53,7 +53,7 @@ fun CreateDropdown() {
             "Sunday",
         )
     var expanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf("Select an item") }
+    var selectedItem by remember { mutableStateOf(day) }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -66,7 +66,7 @@ fun CreateDropdown() {
                         .menuAnchor(),
                 readOnly = true,
                 value = selectedItem,
-                onValueChange = {},
+                onValueChange = onChangeDay,
                 label = { Text("Select a day") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                 colors =
@@ -85,6 +85,7 @@ fun CreateDropdown() {
                         onClick = {
                             selectedItem = day
                             expanded = false
+                            onChangeDay(day)
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )

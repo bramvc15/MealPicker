@@ -1,4 +1,4 @@
-package com.example.mealpicker
+package com.example.mealpicker.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
@@ -21,7 +22,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import data.PlannedMeal
+import com.example.mealpicker.R
+import data.MealSampler
 
 enum class Destination {
     Home,
@@ -32,7 +34,7 @@ enum class Destination {
 
 @Composable
 fun MealPickerApp() {
-    var addingMeal by remember {
+    var addingMeal by rememberSaveable {
         mutableStateOf(false)
     }
     val navController = rememberNavController()
@@ -84,7 +86,7 @@ fun MealPickerApp() {
     ) { innerPadding ->
         val meals =
             remember {
-                val list = PlannedMeal.getAll().toMutableList()
+                val list = MealSampler.getAll().toMutableList()
 
                 list.toMutableStateList()
             }

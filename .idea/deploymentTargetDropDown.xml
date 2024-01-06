@@ -2,7 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ShowNavigationGroceryButton()">
+        <State />
+      </entry>
+      <entry key="Tests in 'com.example.mealpicker'">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="clickOnGroceryNavigationButton()">
+        <State />
+      </entry>
+      <entry key="startappshowsstartscreen()">
         <State />
       </entry>
     </value>

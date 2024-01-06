@@ -1,8 +1,12 @@
 package com.example.mealpicker.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -11,13 +15,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 
 @Composable
 fun UpdateMeal(
@@ -26,21 +35,31 @@ fun UpdateMeal(
     onChangeName: (String) -> Unit,
     onChangeDay: (String) -> Unit,
     onAdd: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column {
-        CreateDropdown(day, onChangeDay)
-
-        TextField(label = { Text("Name: ") }, value = name, onValueChange = onChangeName)
-
-        Button(onClick = onAdd) {
-            Text("Change meal")
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+        Card(modifier = modifier
+            .padding(24.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier.padding(24.dp),
+            ){
+                CreateDropdown(day, onChangeDay, modifier)
+                Spacer(modifier = Modifier.height(16.dp))
+                TextField(label = { Text("Name: ") }, value = name, onValueChange = onChangeName)
+                Spacer(modifier = Modifier.height(25.dp))
+                TextButton(onClick = onAdd) {
+                    Text("Change meal")
+                }
+            }
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateDropdown(day:String, onChangeDay: (String) -> Unit) {
+fun CreateDropdown(day:String, onChangeDay: (String) -> Unit, modifier: Modifier) {
 
     val days =
         listOf(
@@ -61,9 +80,8 @@ fun CreateDropdown(day:String, onChangeDay: (String) -> Unit) {
         ) {
             OutlinedTextField(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
+                modifier
+                    .menuAnchor(),
                 readOnly = true,
                 value = selectedItem,
                 onValueChange = onChangeDay,
@@ -93,4 +111,16 @@ fun CreateDropdown(day:String, onChangeDay: (String) -> Unit) {
 
         }
     }
+}
+
+@Preview
+@Composable
+fun UpdateMealPreview() {
+    UpdateMeal(
+        day = "Monday",
+        name = "Spaghetti",
+        onChangeName = {},
+        onChangeDay = {},
+        onAdd = {},
+    )
 }

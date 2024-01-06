@@ -1,12 +1,11 @@
 package com.example.mealpicker.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,47 +17,48 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mealpicker.R
+import com.example.mealpicker.ui.GroceryScreen.GroceryOverviewScreen
+import com.example.mealpicker.ui.GroceryScreen.GroceryOverviewViewModel
 import data.MealSampler
 
-enum class Destination {
-    Home,
-    Calendar,
-    GroceryOverview,
-    Profile,
+enum class Destination (@StringRes val title: Int){
+    Home(title = R.string.home_info_title),
+    Calendar(title = R.string.calendar_info_title),
+    GroceryOverview(title = R.string.grocery_overview_info_title),
+    Profile(title = R.string.profile_info_title),
 }
 
 @Composable
-fun MealPickerApp() {
+//navController in parameter voor te kunnen testen anders zal bij zelf 1 aanmaken
+fun MealPickerApp(navController: NavHostController = rememberNavController()) {
     var addingMeal by rememberSaveable {
         mutableStateOf(false)
     }
-    val navController = rememberNavController()
+
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreenTitle = Destination.valueOf(currentBackStackEntry?.destination?.route ?: Destination.Home.name).title
+    val navigateUp: () -> Unit = {
+        navController.popBackStack(
+            Destination.Home.name,
+            inclusive = false
+        )
+    }
+    val canNavigateBack = navController.previousBackStackEntry != null
+
     Scaffold(
         topBar = {
+
             MyTopAppBar(
-                {
-                    val isStartDestination = currentBackStackEntry?.destination?.route == Destination.Home.name
-                    if (!isStartDestination) {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                        }
-                    }
-                },
-                when(currentBackStackEntry?.destination?.route){
-                    Destination.Home.name -> R.string.home_info_title
-                    Destination.Calendar.name -> R.string.calendar_info_title
-                    Destination.GroceryOverview.name -> R.string.grocery_overview_info_title
-                    Destination.Profile.name -> R.string.profile_info_title
-                    else -> R.string.app_title
-                }
+                canNavigateBack = canNavigateBack,
+                navigateUp = navigateUp,
+
+                currentScreenTitle = currentScreenTitle,
             )
         },
         bottomBar = {

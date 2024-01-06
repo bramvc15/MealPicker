@@ -1,4 +1,4 @@
-package com.example.mealpicker.ui
+package com.example.mealpicker.ui.GroceryScreen
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
@@ -14,6 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mealpicker.ui.IngredientItem
+import com.example.mealpicker.ui.MealItem
+import com.example.mealpicker.ui.UpdateMeal
 import data.MealSampler
 
 @Composable
@@ -23,10 +26,8 @@ fun GroceryOverviewScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: GroceryOverviewViewModel = viewModel()
-    val groceryOverviewUiState by viewModel.groceryOverviewUiState.collectAsState()
+    val groceryOverviewUiState by viewModel.uiState.collectAsState()
     val ingredients = groceryOverviewUiState.ingredients
-    Log.i("GroceryOverviewScreen", "ingredients: $ingredients")
-    val meals = groceryOverviewUiState.meals
 
 
     Box(modifier = modifier) {
@@ -44,7 +45,7 @@ fun GroceryOverviewScreen(
             )
         } else {
             LazyColumn {
-                items(meals) {
+                items(groceryOverviewUiState.currentMealList) {
                     MealItem(name = it.name, day = it.day)
                 }
 

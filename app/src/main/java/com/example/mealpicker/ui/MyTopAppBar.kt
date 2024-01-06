@@ -27,7 +27,8 @@ fun MyTopAppBar(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
         title = {
-            Text(stringResource(id = currentScreenTitle))
+
+            Text(stringResource(id = currentScreenTitle), color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
         navigationIcon = {
             if (canNavigateBack) {

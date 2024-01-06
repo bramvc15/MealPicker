@@ -1,4 +1,4 @@
-package com.example.mealpicker.data
+package data
 
 import kotlin.random.Random
 
@@ -47,6 +47,13 @@ data class Ingredient(val name: String, val instruction: String = "") {
                 sampleIngredients[Random.nextInt(0, sampleIngredients.size)].name,
                 sampleIngredients[Random.nextInt(0, sampleIngredients.size)].instruction,
             )
+        }
+        val getAll: () -> List<Ingredient> = {
+            val list = mutableListOf<Ingredient>()
+            for(item in sampleIngredients){
+                list.add(Ingredient(item.name, item.instruction))
+            }
+            list
         }
     }
 }

@@ -16,11 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mealpicker.data.PlannedMeal
+import data.PlannedMeal
 
 enum class Destination {
     Home,
@@ -38,17 +39,25 @@ fun MealPickerApp() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     Scaffold(
         topBar = {
-            MyTopAppBar {
-
-                val isStartDestination = currentBackStackEntry?.destination?.route == Destination.Home.name
-                if(!isStartDestination) {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            MyTopAppBar(
+                {
+                    val isStartDestination = currentBackStackEntry?.destination?.route == Destination.Home.name
+                    if (!isStartDestination) {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
                     }
+                },
+                when(currentBackStackEntry?.destination?.route){
+                    Destination.Home.name -> R.string.home_info_title
+                    Destination.Calendar.name -> R.string.calendar_info_title
+                    Destination.GroceryOverview.name -> R.string.grocery_overview_info_title
+                    Destination.Profile.name -> R.string.profile_info_title
+                    else -> R.string.app_title
                 }
-            }
+            )
         },
         bottomBar = {
             MyBottomAppBar(
@@ -59,19 +68,18 @@ fun MealPickerApp() {
             )
         },
         floatingActionButton = {
-            when(currentBackStackEntry?.destination?.route) {
-                Destination.GroceryOverview.name ->{
+            when (currentBackStackEntry?.destination?.route) {
+                Destination.GroceryOverview.name -> {
                     FloatingActionButton(onClick = { addingMeal = true }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 }
-                Destination.Calendar.name ->{
+                Destination.Calendar.name -> {
                     FloatingActionButton(onClick = { /*TODO*/ }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 }
             }
-
         },
     ) { innerPadding ->
         val meals =
@@ -85,16 +93,21 @@ fun MealPickerApp() {
             startDestination = Destination.Home.name,
             Modifier.padding(innerPadding),
         ) {
+
             composable(Destination.Home.name) {
+                val viewMode: GroceryOverviewViewModel = viewModel()
                 Text("Home page")
             }
             composable(Destination.Calendar.name) {
+                val viewMode: GroceryOverviewViewModel = viewModel()
                 Text("Calendar overview")
             }
             composable(Destination.GroceryOverview.name) {
-                GroceryOverviewScreen(meals, addingMeal, { addingMeal = false })
+                val viewMode: GroceryOverviewViewModel = viewModel()
+                GroceryOverviewScreen(addingMeal, { addingMeal = false })
             }
             composable(Destination.Profile.name) {
+                val viewMode: GroceryOverviewViewModel = viewModel()
                 Text("Profile page")
             }
         }

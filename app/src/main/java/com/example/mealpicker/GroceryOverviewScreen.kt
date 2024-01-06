@@ -1,51 +1,69 @@
 package com.example.mealpicker
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import com.example.mealpicker.data.Ingredient
-import com.example.mealpicker.data.PlannedMeal
+import androidx.lifecycle.viewmodel.compose.viewModel
+import data.Ingredient
+import data.PlannedMeal
 
 @Composable
 fun GroceryOverviewScreen(
-    meals: MutableList<PlannedMeal>,
     addingMeal: Boolean,
     stopAdding: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Box {
+    val viewModel: GroceryOverviewViewModel = viewModel()
+    val groceryOverviewUiState by viewModel.groceryOverviewUiState.collectAsState()
+    val ingredients = groceryOverviewUiState.ingredients
+    Log.i("GroceryOverviewScreen", "ingredients: $ingredients")
+    val meals = groceryOverviewUiState.meals
 
+
+    Box(modifier = modifier) {
         if (addingMeal) {
             var name by remember {
                 mutableStateOf("flower")
+            }
+            var day by remember {
+                mutableStateOf("Monday")
             }
 
             UpdateMeal(
                 name,
                 onChangeName = { name = it },
                 onAdd = {
-                    meals.add(PlannedMeal(name, "Monday", listOf(Ingredient.getOne())))
-                    //addingMeal1 = false
+                    viewModel.addIngredient(name, day, listOf(Ingredient.getOne()))
                     stopAdding()
                 },
-
-                )
+            )
         } else {
-            Column {
-                AllPlannedMeals(meals)
-                IngredientList()
+            LazyColumn {
+                items(meals) {
+                    MealItem(name = it.name, day = it.day)
+                }
+
+                items(ingredients) {
+                    IngredientItem(name = it.name, instruction = it.instruction)
+                }
             }
         }
     }
 }
+
 @Composable
 fun AllPlannedMeals(meals: List<PlannedMeal>) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -64,13 +82,5 @@ fun AllPlannedMeals(meals: List<PlannedMeal>) {
             lineHeight = 20.sp,
             color = MaterialTheme.colorScheme.primary,
         )
-    }
-}
-@Composable
-fun IngredientList() {
-    val ingredient = Ingredient.getOne()
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        IngredientItem(name = ingredient.name, instruction = ingredient.instruction)
     }
 }

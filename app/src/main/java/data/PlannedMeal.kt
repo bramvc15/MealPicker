@@ -1,4 +1,4 @@
-package com.example.mealpicker.data
+package data
 
 data class PlannedMeal(val name: String, val day: String, val ingredients: List<Ingredient>) {
     companion object plannedMealSampler {

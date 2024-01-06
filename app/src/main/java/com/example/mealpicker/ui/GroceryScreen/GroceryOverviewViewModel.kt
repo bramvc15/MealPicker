@@ -23,6 +23,8 @@ class GroceryOverviewViewModel : ViewModel() {
                 currentMealList = currentState.currentMealList + Meal(currentState.newMealName, currentState.newMealDay, currentState.ingredients),
                 newMealName = "",
                 newMealDay = "",
+                doScrollCommand = currentState.doScrollCommand.plus(1),
+                scrollToIndex = currentState.currentMealList.size,
             )
         }
     }

@@ -10,5 +10,7 @@ data class GroceryOverviewUiState(
     val currentMealList: List<Meal>,
     val newMealDay: String = "",
     val newMealName: String = "",
+    val doScrollCommand: Int = 0,
+    val scrollToIndex: Int = 0,
 ) {
 }

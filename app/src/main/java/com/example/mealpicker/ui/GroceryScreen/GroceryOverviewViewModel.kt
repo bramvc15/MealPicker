@@ -3,12 +3,9 @@ package com.example.mealpicker.ui.GroceryScreen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mealpicker.network.MealApi.mealService
-import com.example.mealpicker.network.asDomainObject
 import com.example.mealpicker.network.asDomainObjects
 import com.example.mealpicker.ui.MealApiState
 import data.IngredientSampler
@@ -17,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.function.Consumer
+import java.net.SocketTimeoutException
 
 class GroceryOverviewViewModel : ViewModel() {
     private val _uiState =
@@ -27,9 +24,11 @@ class GroceryOverviewViewModel : ViewModel() {
 
     var mealApiState: MealApiState by mutableStateOf(MealApiState.Loading)
         private set
+
     init {
         getApiMeals()
     }
+
     fun addIngredient() {
         _uiState.update {
                 currentState ->
@@ -50,6 +49,7 @@ class GroceryOverviewViewModel : ViewModel() {
             )
         }
     }
+
     fun setNewMealDay(day: String) {
         _uiState.update {
             it.copy(
@@ -57,43 +57,22 @@ class GroceryOverviewViewModel : ViewModel() {
             )
         }
     }
+
     fun getSeafoodMeals() {
         viewModelScope.launch {
+            val result = mealService.getSeafoodMeal()
+            mealApiState = MealApiState.Success(result.asDomainObjects())
+        }
+    }
+
+    fun getApiMeals() {
+        viewModelScope.launch {
             try {
-                val result = mealService.getSeafoodMeal()
-                mealApiState = MealApiState.Success(result.asDomainObjects())
-            } catch (e: Exception) {
-                println("Error: $e")
+                val result = mealService.getChickenMeals()
+                mealApiState = MealApiState.Success(result.meals.asDomainObjects())
+            } catch (e: SocketTimeoutException) {
                 mealApiState = MealApiState.Error
             }
         }
     }
-    fun getApiMeals() {
-        viewModelScope.launch {
-
-            val result = mealService.getChickenMeals()
-            mealApiState = MealApiState.Success(result.meals.asDomainObjects())
-            result.meals[0].Ingredients.forEach(Consumer {
-                println("ingredient: $it")
-            })
-
-        }
-    }
-    /*fun getApiMeals() {
-        RetrofitInstance.api.getRandomMeal().enqueue(object: Callback<MealList>{
-            override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
-                if(response.body() != null){
-                    val randomMeal:Meal = response.body()!!.meals[0]
-                    Log.d("Random Meal", "meal id ${ randomMeal.idMeal } name ${ randomMeal.strMeal }")
-                }else{
-                    return
-                }
-            }
-
-            override fun onFailure(call: Call<MealList>, t: Throwable) {
-                Log.d("Random Meal", "Error: ${ t.message.toString() }")
-            }
-        })
-
-    }*/
 }

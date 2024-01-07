@@ -59,12 +59,3 @@ class CachingMealRepository(
         }
     }
 }
-
-/*
-class ApiMealRepository(
-    private val mealApiService: MealApiService
-): MealRepository {
-    override suspend fun getChickenMeals() =
-        mealApiService.getChickenMeals().meals.asDomainObjects()
-
-}*/

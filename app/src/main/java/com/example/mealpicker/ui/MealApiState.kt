@@ -6,6 +6,4 @@ sealed interface MealApiState {
     object Error : MealApiState
     object Loading : MealApiState
     object Success : MealApiState
-
-
 }

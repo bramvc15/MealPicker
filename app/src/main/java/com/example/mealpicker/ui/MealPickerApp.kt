@@ -24,19 +24,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mealpicker.R
+import com.example.mealpicker.navigation.AppNavigation
+import com.example.mealpicker.navigation.Destination
 import com.example.mealpicker.ui.GroceryScreen.GroceryOverviewScreen
 import com.example.mealpicker.ui.GroceryScreen.GroceryOverviewViewModel
+import com.example.mealpicker.ui.utils.MealPickerNavigationType
 
-enum class Destination (@StringRes val title: Int){
-    Home(title = R.string.home_info_title),
-    Calendar(title = R.string.calendar_info_title),
-    GroceryOverview(title = R.string.grocery_overview_info_title),
-    Profile(title = R.string.profile_info_title),
-}
+
 
 @Composable
 //navController in parameter voor te kunnen testen anders zal bij zelf 1 aanmaken
-fun MealPickerApp(navController: NavHostController = rememberNavController()) {
+fun MealPickerApp(
+    navigationType: MealPickerNavigationType,
+    navController: NavHostController = rememberNavController()
+) {
+
     var addingMeal by rememberSaveable {
         mutableStateOf(false)
     }
@@ -50,64 +52,47 @@ fun MealPickerApp(navController: NavHostController = rememberNavController()) {
         )
     }
     val canNavigateBack = navController.previousBackStackEntry != null
+    if(navigationType == MealPickerNavigationType.PERMANENT_NAVIGATION_DRAWER){
+        Scaffold(
+            topBar = {
 
-    Scaffold(
-        topBar = {
+                MyTopAppBar(
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateUp,
 
-            MyTopAppBar(
-                canNavigateBack = canNavigateBack,
-                navigateUp = navigateUp,
-
-                currentScreenTitle = currentScreenTitle,
-            )
-        },
-        bottomBar = {
-            MyBottomAppBar(
-                { navController.popBackStack(Destination.Home.name, false) },
-                { navController.navigate(Destination.Calendar.name) },
-                { navController.navigate(Destination.GroceryOverview.name) },
-                { navController.navigate(Destination.Profile.name) },
-            )
-        },
-        floatingActionButton = {
-            when (currentBackStackEntry?.destination?.route) {
-                Destination.GroceryOverview.name -> {
-                    FloatingActionButton(onClick = { addingMeal = true }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
+                    currentScreenTitle = currentScreenTitle,
+                )
+            },
+            bottomBar = {
+                MyBottomAppBar(
+                    { navController.popBackStack(Destination.Home.name, false) },
+                    { navController.navigate(Destination.Calendar.name) },
+                    { navController.navigate(Destination.GroceryOverview.name) },
+                    { navController.navigate(Destination.Profile.name) },
+                )
+            },
+            floatingActionButton = {
+                when (currentBackStackEntry?.destination?.route) {
+                    Destination.GroceryOverview.name -> {
+                        FloatingActionButton(onClick = { addingMeal }) {
+                            Icon(Icons.Default.Add, contentDescription = "Add")
+                        }
+                    }
+                    Destination.Calendar.name -> {
+                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.Add, contentDescription = "Add")
+                        }
                     }
                 }
-                Destination.Calendar.name -> {
-                    FloatingActionButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
-                    }
-                }
-            }
-        },
-    ) { innerPadding ->
-        /*val meals =
-            remember {
-                val list = MealSampler.getAll().toMutableList()
+            },
+        ) { innerPadding ->
+            AppNavigation(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                addingMeal = addingMeal,
+            )
 
-                list.toMutableStateList()
-            }*/
-        NavHost(
-            navController = navController,
-            startDestination = Destination.Home.name,
-            Modifier.padding(innerPadding),
-        ) {
-            Log.d("MealPickerApp", "NavHost initialized")
-            composable(Destination.Home.name) {
-                Text("Home page")
-            }
-            composable(Destination.Calendar.name) {
-                Text("Calendar overview")
-            }
-            composable(Destination.GroceryOverview.name) {
-                GroceryOverviewScreen(addingMeal, { addingMeal = false })
-            }
-            composable(Destination.Profile.name) {
-                Text("Profile page")
-            }
         }
     }
+
 }

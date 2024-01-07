@@ -40,6 +40,7 @@ class GroceryOverviewViewModel(private val mealRepository: MealRepository) : Vie
         getRepoMeals()
     }
 
+
     fun addIngredient() {
         _uiState.update {
                 currentState ->
@@ -73,12 +74,6 @@ class GroceryOverviewViewModel(private val mealRepository: MealRepository) : Vie
     fun getSeafoodMeals() {
         viewModelScope.launch {
             val result = mealRepository.getAllItems()
-
-            /*_uiState.update {
-                it.copy(
-                    currentMealList = result,
-                )
-            }*/
             mealApiState = MealApiState.Success
         }
     }

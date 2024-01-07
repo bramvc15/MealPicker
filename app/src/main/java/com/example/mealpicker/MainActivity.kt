@@ -5,14 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.compose.MealPickerTheme
 import com.example.mealpicker.ui.MealPickerApp
+import com.example.mealpicker.ui.utils.MealPickerNavigationType
 
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -20,7 +25,21 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    MealPickerApp()
+                val windowSize = calculateWindowSizeClass(this)
+                when (windowSize.widthSizeClass) {
+                    WindowWidthSizeClass.Compact -> {
+                        MealPickerApp(MealPickerNavigationType.BOTTOM_NAVIGATION)
+                    }
+                    WindowWidthSizeClass.Medium -> {
+                        MealPickerApp(MealPickerNavigationType.NAVIGATION_RAIL)
+                    }
+                    WindowWidthSizeClass.Expanded -> {
+                        MealPickerApp(navigationType = MealPickerNavigationType.PERMANENT_NAVIGATION_DRAWER)
+                    }
+                    else -> {
+                        MealPickerApp(navigationType = MealPickerNavigationType.BOTTOM_NAVIGATION)
+                    }
+                }
                 }
             }
         }
@@ -31,7 +50,7 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun ScaffoldExamplePreview() {
-    MealPickerApp()
+    MealPickerApp(MealPickerNavigationType.BOTTOM_NAVIGATION)
 }
 
 

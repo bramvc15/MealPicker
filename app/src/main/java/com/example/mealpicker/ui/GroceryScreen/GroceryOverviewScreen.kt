@@ -18,9 +18,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun GroceryOverviewScreen(
+    modifier: Modifier = Modifier,
     addingMeal: Boolean,
     stopAdding: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: GroceryOverviewViewModel = viewModel(factory = GroceryOverviewViewModel.Factory),
 ) {
     val groceryOverviewUiState by viewModel.uiState.collectAsState()

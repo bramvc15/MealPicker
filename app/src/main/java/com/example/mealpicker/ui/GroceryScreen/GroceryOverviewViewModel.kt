@@ -4,11 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.example.mealpicker.network.MealApi.mealService
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.mealpicker.MealsApplication
 import com.example.mealpicker.network.asDomainObjects
 import com.example.mealpicker.ui.MealApiState
-import data.IngredientSampler
+import com.example.mealpicker.data.IngredientSampler
+import com.example.mealpicker.data.MealRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +21,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
-class GroceryOverviewViewModel : ViewModel() {
+class GroceryOverviewViewModel(
+    private val mealRepository: MealRepository
+) : ViewModel() {
     private val _uiState =
         MutableStateFlow(GroceryOverviewUiState(currentMealList = listOf(), ingredients = IngredientSampler.getAll()))
 
@@ -60,18 +67,36 @@ class GroceryOverviewViewModel : ViewModel() {
 
     fun getSeafoodMeals() {
         viewModelScope.launch {
-            val result = mealService.getSeafoodMeal()
-            mealApiState = MealApiState.Success(result.asDomainObjects())
+            val result = mealRepository.getChickenMeals()
+
+            /*_uiState.update {
+                it.copy(
+                    currentMealList = result,
+                )
+            }*/
+            mealApiState = MealApiState.Success(result)
         }
     }
 
     fun getApiMeals() {
         viewModelScope.launch {
-            try {
-                val result = mealService.getChickenMeals()
-                mealApiState = MealApiState.Success(result.meals.asDomainObjects())
-            } catch (e: SocketTimeoutException) {
-                mealApiState = MealApiState.Error
+            val result = mealRepository.getChickenMeals()
+            println("result: $result")
+            /*_uiState.update {
+                it.copy(
+                    currentMealList = result,
+                )
+            }*/
+            mealApiState = MealApiState.Success(result)
+        }
+    }
+
+    companion object{
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = this[APPLICATION_KEY] as MealsApplication
+                val mealRepository = application.container.mealRepository
+                GroceryOverviewViewModel(mealRepository)
             }
         }
     }

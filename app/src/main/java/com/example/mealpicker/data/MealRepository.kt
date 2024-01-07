@@ -6,13 +6,13 @@ import com.example.mealpicker.network.asDomainObjects
 
 //om alles weg te steken van de api calls
 interface MealRepository {
-    suspend fun getMeals(): List<Meal>
+    suspend fun getChickenMeals(): List<Meal>
 }
 
-class ApiMealsRepository(
+class ApiMealRepository(
     private val mealApiService: MealApiService
 ): MealRepository {
-    override suspend fun getMeals(): List<Meal> {
+    override suspend fun getChickenMeals(): List<Meal> {
         return mealApiService.getChickenMeals().meals.asDomainObjects()
     }
 }

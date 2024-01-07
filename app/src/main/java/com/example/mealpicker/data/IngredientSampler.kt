@@ -1,4 +1,4 @@
-package data
+package com.example.mealpicker.data
 
 import com.example.mealpicker.model.Ingredient
 import kotlin.random.Random

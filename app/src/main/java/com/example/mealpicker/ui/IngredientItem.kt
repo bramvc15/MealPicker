@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -41,27 +39,27 @@ fun IngredientItem(
     instruction: String = "",
 ) {
     ElevatedCard(
-        modifier = modifier.padding(16.dp,4.dp),
-    ){
+        modifier = modifier.padding(16.dp, 4.dp),
+    ) {
         var checked by rememberSaveable { mutableStateOf(false) }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier =
-            modifier
-                .animateContentSize (
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessLow
+                modifier
+                    .animateContentSize(
+                        animationSpec =
+                            spring(
+                                dampingRatio = Spring.DampingRatioNoBouncy,
+                                stiffness = Spring.StiffnessLow,
+                            ),
                     )
-                )
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth(),
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth(),
         ) {
             var expanded by remember { mutableStateOf(false) }
             Column(modifier = Modifier.padding(8.dp)) {
-
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(checked = checked, onCheckedChange = { checked = !checked })
@@ -73,21 +71,20 @@ fun IngredientItem(
                     )
                 }
 
-                if (expanded){
+                if (expanded) {
                     Text(
                         instruction,
                         fontSize = 14.sp,
                         lineHeight = 20.sp,
                     )
                 }
-
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { expanded = !expanded}) {
+            IconButton(onClick = { expanded = !expanded }) {
                 Icon(
-                    imageVector= if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                    contentDescription= "expand",
+                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    contentDescription = "expand",
                 )
             }
         }

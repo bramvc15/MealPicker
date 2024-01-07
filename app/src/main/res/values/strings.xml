@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">MealPicker</string>
+    <string name="api_key">199b55d3efb44583b32991e9ede92b6f</string>
     <string name="app_title">Meal Picker</string>
     <string name="home_info_title">Home</string>
     <string name="calendar_info_title">Calendar</string>
     <string name="grocery_overview_info_title">Grocery Overview</string>
     <string name="profile_info_title">Profile</string>
     <string name="update_a_meal">Update a meal</string>
+
 </resources>

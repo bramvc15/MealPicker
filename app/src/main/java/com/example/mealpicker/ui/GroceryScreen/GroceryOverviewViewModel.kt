@@ -3,10 +3,13 @@ package com.example.mealpicker.ui.GroceryScreen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mealpicker.network.MealApi.mealService
 import com.example.mealpicker.network.asDomainObject
+import com.example.mealpicker.network.asDomainObjects
 import com.example.mealpicker.ui.MealApiState
 import data.IngredientSampler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.function.Consumer
 
 class GroceryOverviewViewModel : ViewModel() {
     private val _uiState =
@@ -23,11 +27,9 @@ class GroceryOverviewViewModel : ViewModel() {
 
     var mealApiState: MealApiState by mutableStateOf(MealApiState.Loading)
         private set
-
     init {
         getApiMeals()
     }
-
     fun addIngredient() {
         _uiState.update {
                 currentState ->
@@ -48,7 +50,6 @@ class GroceryOverviewViewModel : ViewModel() {
             )
         }
     }
-
     fun setNewMealDay(day: String) {
         _uiState.update {
             it.copy(
@@ -56,17 +57,26 @@ class GroceryOverviewViewModel : ViewModel() {
             )
         }
     }
-
-    private fun getApiMeals() {
+    fun getSeafoodMeals() {
         viewModelScope.launch {
             try {
-                val result = mealService.getRandomMeal()
-                println("result: $result")
-                mealApiState = MealApiState.Success(result.asDomainObject())
+                val result = mealService.getSeafoodMeal()
+                mealApiState = MealApiState.Success(result.asDomainObjects())
             } catch (e: Exception) {
                 println("Error: $e")
                 mealApiState = MealApiState.Error
             }
+        }
+    }
+    fun getApiMeals() {
+        viewModelScope.launch {
+
+            val result = mealService.getChickenMeals()
+            mealApiState = MealApiState.Success(result.meals.asDomainObjects())
+            result.meals[0].Ingredients.forEach(Consumer {
+                println("ingredient: $it")
+            })
+
         }
     }
     /*fun getApiMeals() {

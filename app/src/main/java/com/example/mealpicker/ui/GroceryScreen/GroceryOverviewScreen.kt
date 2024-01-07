@@ -1,22 +1,16 @@
 package com.example.mealpicker.ui.GroceryScreen
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mealpicker.model.Meal
-import com.example.mealpicker.model.MealList
 import com.example.mealpicker.ui.IngredientItem
 import com.example.mealpicker.ui.MealApiState
 import com.example.mealpicker.ui.MealItem
@@ -53,9 +47,9 @@ fun GroceryOverviewScreen(
                     }
                 }
                 is MealApiState.Success -> {
-                    item{
-                        println("mealllllllll: ${mealApiState.meals}")
-                        mealApiState.meals?.let { IngredientItem(name = it.name, instruction = mealApiState.meals.instruction) }
+
+                    items(mealApiState.meals) {
+                        IngredientItem(name = it.name, instruction = it.instruction)
                     }
                 }
                 is MealApiState.Error -> {

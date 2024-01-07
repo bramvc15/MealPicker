@@ -1,9 +1,11 @@
 package com.example.mealpicker.network
 
+import MealApiResponse
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
 private val retrofit = Retrofit.Builder()
@@ -20,10 +22,13 @@ object MealApi {
 
 interface MealApiService {
     @GET("random.php")
-    suspend fun getRandomMeal(): Call<APIMeal>
+    suspend fun getRandomMeal(): APIMeal
 
     @GET("filter.php?c=Seafood")
     suspend fun getSeafoodMeal(): List<APIMeal>
+    @GET("filter.php?i=chicken_breast")
+    suspend fun getChickenMeals(): MealApiResponse
+
 }
 
 

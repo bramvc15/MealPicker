@@ -15,26 +15,20 @@ data class APIMeal(
     val strTags: String,
     val strYoutube: String,
     val Ingredients: List<String>,
-    val measurments: List<String>,
+    val measurements: List<String>,
     val strSource: String,
     val strImageSource: String,
     val strCreativeCommonsConfirmed: String,
     val dateModified: String,
 )
-un Call<APIMeal>.asDomainObjectCall(): Call<Meal> {
-    return object : Call<Meal> {
-        override fun execute(): Response<Meal> {
-            return Response.success(execute().body()?.asDomainObject() ?: Meal())
-        }
+fun List<APIMeal>.asDomainObjects(): List<Meal> {
+    return this.map { it.asDomainObject() }
+}
 
-        override fun enqueue(callback: Callback<Meal>) {
-            // For simplicity, you can just call execute in this example
-            val response = execute()
-            callback.onResponse(this, response)
-        }
+fun APIMeal.asDomainObject(): Meal {
+    return Meal(name = strMeal, instruction = strMealThumb)
+}
 
-        // Other methods similar to the previous example...
-    }
 
 
 

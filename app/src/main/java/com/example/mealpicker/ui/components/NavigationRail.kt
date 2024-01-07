@@ -15,7 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mealpicker.navigation.listOfNavItems
 
 @Composable
-fun VisionNavigationRail(
+fun MealPickerNavigationRail(
     selectedDestination: NavDestination?,
     modifier: Modifier = Modifier,
     navController: NavHostController,

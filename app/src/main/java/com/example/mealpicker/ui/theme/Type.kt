@@ -2,12 +2,23 @@ package com.example.mealpicker.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.mealpicker.R
 
+val PlayfairDisplay = FontFamily(
+    Font(R.font.playfairdisplay_italic),
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
+    headlineSmall = TextStyle(
+        fontFamily = PlayfairDisplay,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+    ),
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,

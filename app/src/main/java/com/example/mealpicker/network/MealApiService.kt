@@ -1,6 +1,7 @@
 package com.example.mealpicker.network
 
 import MealApiResponse
+import kotlinx.coroutines.flow.flow
 import retrofit2.http.GET
 
 interface MealApiService {
@@ -10,8 +11,9 @@ interface MealApiService {
     @GET("filter.php?c=Seafood")
     suspend fun getSeafoodMeal(): List<APIMeal>
     @GET("filter.php?i=chicken_breast")
-    suspend fun getChickenMeals(): MealApiResponse
+    suspend fun getAllMeals(): MealApiResponse
 
 }
-//1:05:00
+
+fun MealApiService.getMealAsFlow() = flow { emit(getAllMeals()) }
 

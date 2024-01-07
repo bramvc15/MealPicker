@@ -13,7 +13,7 @@ class FakeMealsApiService : MealApiService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getChickenMeals(): List<APIMeal> {
+    override suspend fun getAllMeals(): List<APIMeal> {
         return FakeDataSource.meals
     }
 }

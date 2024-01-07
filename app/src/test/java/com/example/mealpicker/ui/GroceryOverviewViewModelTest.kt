@@ -36,7 +36,7 @@ class GroceryOverviewViewModelTest {
 
     @Test
     fun viewModelStartsWithEmptyNewMealDay() {
-        assertEquals("", viewModel.uiState.value.newMealDay)
+        assertEquals("", viewModel.uiState.value.newDescription)
     }
 
     @Test
@@ -53,7 +53,7 @@ class GroceryOverviewViewModelTest {
     @Test
     fun `can set meal day`()  {
         viewModel.setNewMealDay("test")
-        assertEquals("test", viewModel.uiState.value.newMealDay)
+        assertEquals("test", viewModel.uiState.value.newDescription)
     }
 
     @Test
@@ -67,7 +67,7 @@ class GroceryOverviewViewModelTest {
     fun `day gets cleared when saved`()  {
         viewModel.setNewMealDay("test")
         viewModel.addIngredient()
-        assertEquals("", viewModel.uiState.value.newMealDay)
+        assertEquals("", viewModel.uiState.value.newDescription)
     }
 }
 

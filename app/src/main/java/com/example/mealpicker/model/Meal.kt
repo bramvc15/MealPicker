@@ -1,9 +1,12 @@
 package com.example.mealpicker.model
 
-import data.IngredientSampler
+import com.example.mealpicker.network.APIMeal
+import kotlinx.serialization.Serializable
+
 
 data class Meal (
     var name: String = "",
-    var day: String = "",
-    var ingredients: List<Ingredient> = listOf(),
+    var instruction: String = "",
+    //var day: String = "",
+    //var ingredients: List<Ingredient> = listOf(),
 )

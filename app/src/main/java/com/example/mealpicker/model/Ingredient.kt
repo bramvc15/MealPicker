@@ -4,3 +4,4 @@ data class Ingredient (
     var name: String = "",
     var instruction: String = "",
 )
+

@@ -25,7 +25,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mealpicker.R
 import com.example.mealpicker.ui.GroceryScreen.GroceryOverviewScreen
 import com.example.mealpicker.ui.GroceryScreen.GroceryOverviewViewModel
-import data.MealSampler
 
 enum class Destination (@StringRes val title: Int){
     Home(title = R.string.home_info_title),
@@ -84,12 +83,12 @@ fun MealPickerApp(navController: NavHostController = rememberNavController()) {
             }
         },
     ) { innerPadding ->
-        val meals =
+        /*val meals =
             remember {
                 val list = MealSampler.getAll().toMutableList()
 
                 list.toMutableStateList()
-            }
+            }*/
         NavHost(
             navController = navController,
             startDestination = Destination.Home.name,

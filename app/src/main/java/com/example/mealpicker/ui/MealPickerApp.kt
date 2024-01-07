@@ -1,5 +1,6 @@
 package com.example.mealpicker.ui
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -94,21 +95,17 @@ fun MealPickerApp(navController: NavHostController = rememberNavController()) {
             startDestination = Destination.Home.name,
             Modifier.padding(innerPadding),
         ) {
-
+            Log.d("MealPickerApp", "NavHost initialized")
             composable(Destination.Home.name) {
-                val viewMode: GroceryOverviewViewModel = viewModel()
                 Text("Home page")
             }
             composable(Destination.Calendar.name) {
-                val viewMode: GroceryOverviewViewModel = viewModel()
                 Text("Calendar overview")
             }
             composable(Destination.GroceryOverview.name) {
-                val viewMode: GroceryOverviewViewModel = viewModel()
                 GroceryOverviewScreen(addingMeal, { addingMeal = false })
             }
             composable(Destination.Profile.name) {
-                val viewMode: GroceryOverviewViewModel = viewModel()
                 Text("Profile page")
             }
         }

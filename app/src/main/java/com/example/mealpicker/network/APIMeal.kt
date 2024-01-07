@@ -1,5 +1,6 @@
 package com.example.mealpicker.network
 
+import android.util.Log
 import com.example.mealpicker.model.Meal
 import kotlinx.serialization.Serializable
 import retrofit2.Call
@@ -14,7 +15,7 @@ data class APIMeal(
     val strMealThumb: String,
     val strTags: String,
     val strYoutube: String,
-    val Ingredients: List<String>,
+    val ingredients: List<String>,
     val measurements: List<String>,
     val strSource: String,
     val strImageSource: String,
@@ -22,6 +23,7 @@ data class APIMeal(
     val dateModified: String,
 )
 fun List<APIMeal>.asDomainObjects(): List<Meal> {
+    Log.d("APIMeal", "Retrofit initialized")
     return this.map { it.asDomainObject() }
 }
 

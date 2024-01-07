@@ -2,9 +2,10 @@ package com.example.mealpicker.fake
 
 import com.example.mealpicker.data.MealRepository
 import com.example.mealpicker.model.Meal
+import com.example.mealpicker.network.asDomainObjects
 
-class FakeApiTasksRepository : MealRepository {
+class FakeApiMealsRepository : MealRepository {
     override suspend fun getChickenMeals(): List<Meal>{
-        TODO("")
+        return FakeDataSource.meals.asDomainObjects()
     }
 }

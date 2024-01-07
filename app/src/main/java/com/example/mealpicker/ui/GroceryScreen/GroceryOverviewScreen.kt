@@ -20,9 +20,8 @@ fun GroceryOverviewScreen(
     addingMeal: Boolean,
     stopAdding: () -> Unit,
     modifier: Modifier = Modifier,
-    mealOverviewViewModel: GroceryOverviewViewModel = viewModel(factory = GroceryOverviewViewModel.Factory),
+    viewModel: GroceryOverviewViewModel = viewModel(factory = GroceryOverviewViewModel.Factory),
 ) {
-    val viewModel: GroceryOverviewViewModel = viewModel()
     val groceryOverviewUiState by viewModel.uiState.collectAsState()
     val ingredients = groceryOverviewUiState.ingredients
 

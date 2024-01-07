@@ -12,7 +12,7 @@ interface MealRepository {
 class ApiMealRepository(
     private val mealApiService: MealApiService
 ): MealRepository {
-    override suspend fun getChickenMeals(): List<Meal> {
-        return mealApiService.getChickenMeals().meals.asDomainObjects()
-    }
+    override suspend fun getChickenMeals() =
+        mealApiService.getChickenMeals().meals.asDomainObjects()
+
 }

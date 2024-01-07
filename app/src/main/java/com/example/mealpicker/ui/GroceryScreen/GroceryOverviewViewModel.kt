@@ -1,5 +1,6 @@
 package com.example.mealpicker.ui.GroceryScreen
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.mealpicker.MealsApplication
-import com.example.mealpicker.network.asDomainObjects
 import com.example.mealpicker.ui.MealApiState
 import com.example.mealpicker.data.IngredientSampler
 import com.example.mealpicker.data.MealRepository
@@ -19,11 +19,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
+import java.io.IOException
 
-class GroceryOverviewViewModel(
-    private val mealRepository: MealRepository
-) : ViewModel() {
+class GroceryOverviewViewModel(private val mealRepository: MealRepository) : ViewModel() {
     private val _uiState =
         MutableStateFlow(GroceryOverviewUiState(currentMealList = listOf(), ingredients = IngredientSampler.getAll()))
 
@@ -33,6 +31,7 @@ class GroceryOverviewViewModel(
         private set
 
     init {
+        Log.d("GroceryOverviewViewModel", "ViewModel initialized")
         getApiMeals()
     }
 
@@ -80,23 +79,27 @@ class GroceryOverviewViewModel(
 
     fun getApiMeals() {
         viewModelScope.launch {
-            val result = mealRepository.getChickenMeals()
-            println("result: $result")
-            /*_uiState.update {
-                it.copy(
-                    currentMealList = result,
-                )
-            }*/
-            mealApiState = MealApiState.Success(result)
+            try {
+                val result = mealRepository.getChickenMeals()
+                println("result: $result")
+                _uiState.update {
+                    it.copy(currentMealList = result,)
+                }
+                mealApiState = MealApiState.Success(result)
+            } catch (e: IOException) {
+                mealApiState = MealApiState.Error
+            }
         }
     }
 
-    companion object{
+    companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
+            Log.d("GroceryOverviewViewModel", "ViewModel Factory initialized")
             initializer {
                 val application = this[APPLICATION_KEY] as MealsApplication
-                val mealRepository = application.container.mealRepository
-                GroceryOverviewViewModel(mealRepository)
+                val mealsRepository = application.container.mealRepository
+                GroceryOverviewViewModel(mealsRepository)
+
             }
         }
     }

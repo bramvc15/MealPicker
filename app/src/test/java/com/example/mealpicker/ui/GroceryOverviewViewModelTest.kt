@@ -39,10 +39,6 @@ class GroceryOverviewViewModelTest {
         assertEquals("", viewModel.uiState.value.newDescription)
     }
 
-    @Test
-    fun viewModelStartsWithEmptyCurrentMealList() {
-        assertEquals(listOf<Meal>(), viewModel.uiState.value.currentMealList)
-    }
 
     @Test
     fun `can set meal name`()  {

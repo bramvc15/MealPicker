@@ -90,6 +90,7 @@ fun MealPickerApp(
                     AppNavigation(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
+
                     )
                 }
             }

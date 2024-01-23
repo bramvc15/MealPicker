@@ -50,7 +50,7 @@ class MealPickerAppTest {
     @Test
     fun ShowNavigationGroceryButton() {
         composeTestRule
-            .onNodeWithContentDescription("Grocery Overview")
+            .onNodeWithContentDescription("Grocery")
             .assertIsDisplayed()
             .assertIsEnabled()
     }
@@ -58,7 +58,7 @@ class MealPickerAppTest {
     @Test
     fun `clickOnGroceryNavigationButton`() {
         composeTestRule
-            .onNodeWithContentDescription("Grocery Overview")
+            .onNodeWithContentDescription("Grocery")
             .performClick()
         assertEquals(Destination.GroceryOverview.name, navController.currentBackStackEntry?.destination?.route)
     }

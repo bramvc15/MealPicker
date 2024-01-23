@@ -23,19 +23,19 @@ fun MyBottomAppBar(
         contentColor = MaterialTheme.colorScheme.primary,
         actions = {
             IconButton(onClick = onHome) {
-                Icon(Icons.Filled.Home, contentDescription = "navigate to home page")
+                Icon(Icons.Filled.Home, contentDescription = "Home")
             }
             IconButton(onClick = onScheduler) {
-                Icon(Icons.Filled.DateRange, contentDescription = "navigate to scheduler page")
+                Icon(Icons.Filled.DateRange, contentDescription = "Scheduler")
             }
             IconButton(onClick = onTotalList) {
                 Icon(
                     Icons.Filled.List,
-                    contentDescription = "navigate to total grocery list page",
+                    contentDescription = "Grocery Overview",
                 )
             }
             IconButton(onClick = onProfile) {
-                Icon(Icons.Filled.Person, contentDescription = "navigate to profile page")
+                Icon(Icons.Filled.Person, contentDescription = "Profile")
             }
         },
     )

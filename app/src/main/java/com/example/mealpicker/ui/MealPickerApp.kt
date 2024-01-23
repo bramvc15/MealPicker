@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationRail
@@ -37,7 +36,7 @@ import com.example.mealpicker.ui.utils.MealPickerNavigationType
 // navController in parameter voor te kunnen testen anders zal bij zelf 1 aanmaken
 @Composable
 fun MealPickerApp(
-    navigationType: MealPickerNavigationType,
+    navigationType: MealPickerNavigationType = MealPickerNavigationType.BOTTOM_NAVIGATION,
     navController: NavHostController = rememberNavController(),
 ) {
     var addingMeal by rememberSaveable {
@@ -53,8 +52,8 @@ fun MealPickerApp(
         )
     }
     val canNavigateBack = navController.previousBackStackEntry != null
-    when {
-        navigationType == MealPickerNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
+    if (navigationType == MealPickerNavigationType.PERMANENT_NAVIGATION_DRAWER)
+        {
             PermanentNavigationDrawer(drawerContent = {
                 PermanentDrawerSheet(Modifier.width(dimensionResource(R.dimen.drawer_width))) {
                     NavigationDrawerContent(
@@ -75,7 +74,7 @@ fun MealPickerApp(
                     floatingActionButton = {
                         when (currentBackStackEntry?.destination?.route) {
                             Destination.GroceryOverview.name -> {
-                                FloatingActionButton(onClick = { addingMeal }) {
+                                FloatingActionButton(onClick = { addingMeal = !addingMeal}) {
                                     Icon(Icons.Default.Add, contentDescription = "Add")
                                 }
                             }
@@ -94,57 +93,79 @@ fun MealPickerApp(
                     )
                 }
             }
-        }
-
-        navigationType == MealPickerNavigationType.BOTTOM_NAVIGATION -> {
-            Scaffold(
-                topBar = {
-                    MyTopAppBar(
-                        canNavigateBack = canNavigateBack,
-                        navigateUp = navigateUp,
-                        currentScreenTitle = currentScreenTitle,
-                    )
-                },
-                bottomBar = {
-                    MyBottomAppBar(
-                        { navController.popBackStack(Destination.Home.name, false) },
-                        { navController.navigate(Destination.Calendar.name) },
-                        { navController.navigate(Destination.GroceryOverview.name) },
-                        { navController.navigate(Destination.Profile.name) },
-                    )
-                }
-
-            ) { innerPadding ->
-
-                AppNavigation(
-                    modifier = Modifier.padding(innerPadding),
+        } else if (navigationType == MealPickerNavigationType.BOTTOM_NAVIGATION) {
+        Scaffold(
+            topBar = {
+                MyTopAppBar(
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateUp,
+                    currentScreenTitle = currentScreenTitle,
+                )
+            },
+            bottomBar = {
+                MealPickerBottomNavigation(
+                    selectedDestination = navController.currentDestination,
                     navController = navController,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            },
+            floatingActionButton = {
+                when (currentBackStackEntry?.destination?.route) {
+                    Destination.GroceryOverview.name -> {
+                        FloatingActionButton(onClick = { addingMeal = !addingMeal }) {
+                            Icon(Icons.Default.Add, contentDescription = "Add")
+                        }
+                    }
 
-                    )
-            }
-        }
-
-        navigationType == MealPickerNavigationType.NAVIGATION_RAIL -> {
-            Log.d("VisionApp", "VisionNavigationType.NAVIGATION_RAIL")
-            Row {
-                AnimatedVisibility(visible = true) {
-                    NavigationRail {
-                        MealPickerNavigationRail(
-                            selectedDestination = navController.currentDestination,
-                            navController = navController,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                    Destination.Calendar.name -> {
+                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.Add, contentDescription = "Add")
+                        }
                     }
                 }
-                Scaffold(
-                    containerColor = Color.Transparent,
-                ) { innerPadding ->
-                    AppNavigation(
+            },
+        ) { innerPadding ->
+
+            AppNavigation(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+            )
+        }
+    } else {
+        Log.d("VisionApp", "VisionNavigationType.NAVIGATION_RAIL")
+        Row {
+            AnimatedVisibility(visible = true) {
+                NavigationRail {
+                    MealPickerNavigationRail(
+                        selectedDestination = navController.currentDestination,
                         navController = navController,
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
+            Scaffold(
+                containerColor = Color.Transparent,
+                floatingActionButton = {
+                    when (currentBackStackEntry?.destination?.route) {
+                        Destination.GroceryOverview.name -> {
+                            FloatingActionButton(onClick = { addingMeal = !addingMeal }) {
+                                Icon(Icons.Default.Add, contentDescription = "Add")
+                            }
+                        }
+
+                        Destination.Calendar.name -> {
+                            FloatingActionButton(onClick = { /*TODO*/ }) {
+                                Icon(Icons.Default.Add, contentDescription = "Add")
+                            }
+                        }
+                    }
+                },
+            ) { innerPadding ->
+                AppNavigation(
+                    navController = navController,
+                    modifier = Modifier.padding(innerPadding),
+                )
+            }
         }
-    } 
+    }
 }

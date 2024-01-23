@@ -36,7 +36,7 @@ fun MealPickerBottomNavigation(
                     }
                 },
                 icon = {
-                    Icon(imageVector = navItem.icon, contentDescription = null)
+                    Icon(imageVector = navItem.icon, contentDescription = navItem.label)
                 },
                 label = {
                     Text(text = navItem.label)

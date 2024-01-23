@@ -36,7 +36,6 @@ class GroceryOverviewViewModel(private val mealRepository: MealRepository) : Vie
         private set
 
     init {
-        Log.d("GroceryOverviewViewModel", "ViewModel initialized")
         getRepoMeals()
     }
 
@@ -97,7 +96,6 @@ class GroceryOverviewViewModel(private val mealRepository: MealRepository) : Vie
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
-                Log.d("GroceryOverviewViewModel", "ViewModel Factory initialized")
                 initializer {
                     val application = this[APPLICATION_KEY] as MealsApplication
                     val mealsRepository = application.container.mealRepository

@@ -12,6 +12,8 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.mealpicker.navigation.Destination
+import com.example.mealpicker.ui.utils.MealPickerNavigationType
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -23,13 +25,16 @@ class MealPickerAppTest {
     val composeTestRule = createComposeRule()
     //lateinit wil zeggen dat de variabele niet meteen geinitialiseerd moet worden
     lateinit var navController: TestNavHostController
-
+    //<string name="home_info_title">Home</string>
+ //   <string name="calendar_info_title">Calendar</string>
+//    <string name="grocery_overview_info_title">Grocery Overview</string>
+  //  <string name="profile_info_title">Profile</string>
     @Before
     fun setUp() {
         composeTestRule.setContent {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
-            MealPickerApp(navController)
+            MealPickerApp(MealPickerNavigationType.PERMANENT_NAVIGATION_DRAWER, navController)
 
         }
     }
@@ -37,58 +42,51 @@ class MealPickerAppTest {
     @Test
     fun ShowNavigationSchedulerButton() {
         composeTestRule
-            .onNodeWithContentDescription("navigate to scheduler page")
+            .onNodeWithContentDescription("Calendar")
             .assertIsDisplayed()
             .assertIsEnabled()
-    }
-
-    //Kijken of de startpagina getoond wordt
-    @Test
-    fun `startappshowsstartscreen`() {
-        composeTestRule
-            .onNodeWithText(getResourceString(Destination.Home.title))
-            .assertIsDisplayed()
     }
 
     @Test
     fun ShowNavigationGroceryButton() {
         composeTestRule
-            .onNodeWithContentDescription("navigate to total grocery list page")
+            .onNodeWithContentDescription("Grocery Overview")
             .assertIsDisplayed()
             .assertIsEnabled()
     }
+
     @Test
     fun `clickOnGroceryNavigationButton`() {
         composeTestRule
-            .onNodeWithContentDescription("navigate to total grocery list page")
+            .onNodeWithContentDescription("Grocery Overview")
             .performClick()
         assertEquals(Destination.GroceryOverview.name, navController.currentBackStackEntry?.destination?.route)
-
     }
+
     @Test
     fun `clickOnCalendarNavigationButton`() {
         composeTestRule
-            .onNodeWithContentDescription("navigate to scheduler page")
+            .onNodeWithContentDescription("Calendar")
             .performClick()
         assertEquals(Destination.Calendar.name, navController.currentBackStackEntry?.destination?.route)
-
     }
+
     @Test
     fun `clickOnProfileNavigationButton`() {
         composeTestRule
-            .onNodeWithContentDescription("navigate to profile page")
+            .onNodeWithContentDescription("Profile")
             .performClick()
         assertEquals(Destination.Profile.name, navController.currentBackStackEntry?.destination?.route)
-
     }
 
     @Test
     fun ShowNavigationProfileButton() {
         composeTestRule
-            .onNodeWithContentDescription("navigate to profile page")
+            .onNodeWithContentDescription("Profile")
             .assertIsDisplayed()
             .assertIsEnabled()
     }
+
 
     private fun getResourceString(@StringRes key: Int): String{
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext

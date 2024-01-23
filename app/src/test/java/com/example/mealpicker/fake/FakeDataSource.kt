@@ -1,6 +1,8 @@
 package com.example.mealpicker.fake
 
 import com.example.mealpicker.network.APIMeal
+import kotlinx.coroutines.flow.Flow
+
 /*data class APIMeal(
     val strMeal: String,
     val strDrinkAlternate: String,

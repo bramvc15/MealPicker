@@ -26,7 +26,7 @@ val listOfNavItems : List<NavItem> = listOf(
         route = Destination.Calendar.name
     ),
     NavItem(
-        label = "Weekly ingredients",
+        label = "Grocery Overview",
         icon = Icons.Filled.List,
         route = Destination.GroceryOverview.name
     ),

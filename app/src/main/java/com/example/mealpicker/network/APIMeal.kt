@@ -23,7 +23,7 @@ data class APIMeal(
     val dateModified: String,
 )
 fun List<APIMeal>.asDomainObjects(): List<Meal> {
-    Log.d("APIMeal", "Retrofit initialized")
+    //Log.d("APIMeal", "Retrofit initialized")
     return this.map { it.asDomainObject() }
 }
 
